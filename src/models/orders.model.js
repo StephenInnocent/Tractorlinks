@@ -4,7 +4,9 @@ const orderSchema = new Schema({
     name: String,
     contact: Number,
     location: String,
-    date: Date,
+    date: String,
+    class: String,
+    belongsTo: String
 })
 
 const orderModel = model ("order", orderSchema)

@@ -1,12 +1,16 @@
 const express = require("express");
-const app = express;;
+const app = express();
 const mongoose = require('mongoose');
 const port = process.env.PORT || 9999;
 const {userRouter} = require("./src/routes/users.routes");
 const {orderRouter} = require("./src/routes/orders.routes")
-const MONGO_URL = "mongodb+srv://Dev1:Tractorlinks1@cluster0.idytdnq.mongodb.net/Tractorlinks?retryWrites=true&w=majority"
+require('dotenv').config();
 
-app.use(express.json())
+const MONGO_URL = process.env.MONGO_URL;
+
+app.use(express.json());
+app.use("/orders", orderRouter);
+app.use("/users", userRouter);
 
 mongoose.connect(MONGO_URL).then(() => {
     app.listen(port, (req,res) =>{

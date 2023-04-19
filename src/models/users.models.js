@@ -22,4 +22,4 @@ const userModel = model("User", userSchema)
 
 module.exports = {
     userModel
-}
+};
