@@ -16,7 +16,7 @@ const userSchema = new Schema({
     tractors: Number,
     ordersCompleted: Number,
     pendingOrders: Number,
-})
+});
 
 const userModel = model("User", userSchema)
 
