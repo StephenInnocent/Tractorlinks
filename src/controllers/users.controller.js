@@ -21,6 +21,9 @@ async function register(req, res) {
 };
 
 async function editProfile(req,res){
+    const salt = bcrypt.genSaltSync(10);
+    const updatedPassword = bcrypt.hashSync(req.body.password, salt)
+    req.body.password = updatedPassword;
     await userModel.findOneAndUpdate({_id: req.params.userID}, {...req.body})
     .catch((e) =>{
         console.log(e);
@@ -40,7 +43,7 @@ async function login(req, res) {
     if (!user) return res.send("User with the input credentials not found! Kindly re-enter your credentials").end();
 
    console.log(`User with username '${user.name}' found`)
-    if (bcrypt.compareSync(req.body.password, user.password)) return res.send("Password incorrect!!").end();
+    if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Password incorrect!!").end();
     user.password = undefined;
      
     res.json(user).end();
