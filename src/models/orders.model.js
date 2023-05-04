@@ -5,9 +5,14 @@ const orderSchema = new Schema({
     contact: Number,
     location: String,
     date: String,
-    class: String,
-    belongsTo: String
-})
+    class: Array,
+    belongsTo: String,
+    status: {
+        type: String,
+        default:"pending",
+        enum: ["pending","completed"]
+    }
+},{timestamps:true})
 
 const orderModel = model ("order", orderSchema)
 

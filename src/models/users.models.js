@@ -1,22 +1,39 @@
-const {model, Schema} = require("mongoose")
+const {model, Schema, trusted} = require("mongoose")
 
 const userSchema = new Schema({
-    name: String,
-    password: String,
-    email: String,
+    name: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        unique:true,
+        required:true
+    },
     phoneNumber:{
         type: Number,
-        unique: true
+        unique: true,
+        required: true
     },
     role: {
+        required: true,
         type:String,
         default: "Farmer",
-        enum: ["Farmer","TractorOwner"]
+        enum: ["Farmer","Tractor Owner"]
     },
     tractors: Number,
     ordersCompleted: Number,
     pendingOrders: Number,
-});
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    accessToken: String,
+},{timestamps:true});
 
 const userModel = model("User", userSchema)
 
