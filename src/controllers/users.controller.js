@@ -23,7 +23,8 @@ async function register(req, res) {
         {expiresIn:"2d"});
 
         console.log(accessToken);
-        res.send(`Succesfully registered!`).json({user}).end();
+        await userModel.findOneAndUpdate({name:req.body.name});
+        res.send(`Succesfully registered!`).end();
     } catch(e){
         console.log('an error ocurred',e);
         res.status(500).send(`User registration failed. please retry`).end()
@@ -41,25 +42,31 @@ async function updateUser(req,res){
         req.body.password = updatedPassword;
 
         try{
-           const updatedUser = await userModel.findOneAndUpdate({_id: req.params.userID}, {...req.body});
+           const updatedUser = await userModel.findOneAndUpdate({_id: req.params.id}, {...req.body});
            updatedUser.password = undefined;
-           res.status(200).json("Profile successfully updated",updatedUser);
+           res.status(200).json({updatedUser});
+           console.log("Profile successfully updated");
         } catch(e){
             res.status(500)
             console.log(e);
         } finally{
-            end()
+            res.end()
         }
     } else{
-        res.status()
+        res.status(500).end()
     }
 
     
 };
 
+async function deleteAccount(req,res){
+    res.json("Your request to delete your account is pending approval by Admin. Email notification will be sent to you. Thank you.")
+    res.end();
+}
+
 async function deleteUser(req,res){
     try{
-        await User.findByIdAndDelete(req.params.userID)
+        await userModel.findByIdAndDelete(req.body.id)
         res.status(200).json("User has been deleted succesfully...")
     } catch(e){
         res.status(500).json(e)
@@ -106,5 +113,6 @@ module.exports = {
     updateUser,
     deleteUser,
     login,
-    getAllUsers
+    getAllUsers,
+    deleteAccount
 }

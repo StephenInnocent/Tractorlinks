@@ -1,14 +1,17 @@
 const jwt = require("jsonwebtoken");
-require("dotenv").config()
+require("dotenv").config();
+const {userModel} = require("../models/users.models")
 
 
 const verifyToken = (req,res,next) => {
     const authHeader = req.headers.token;
+    User = userModel.findById(req.params.id);
     if(authHeader) {
         const token = authHeader.split(" ")[1]
         jwt.verify(token,process.env.JWT_SEC, (err,User) =>{
             if (err) res.status(403).json("Token is not valid");
             req.user = User;
+            console.log("token verified");
             next();
         })
     } else{
@@ -17,7 +20,8 @@ const verifyToken = (req,res,next) => {
 }
 const verifyTokenAndAuthorisation = (req,res,next) => {
     verifyToken(req,res, ()=> {
-        if(req.User.id === req.params.id){
+        if(req.user.id === req.params.id){
+            console.log("Authorised!");
             next();
         }else{
             res.status(403).json("You are not authorised to do that!")
@@ -27,10 +31,12 @@ const verifyTokenAndAuthorisation = (req,res,next) => {
 
 const verifyTokenAndAdmin = (req,res,next) => {
     verifyToken(req,res, ()=> {
-        if(req.User.id === req.params.id || req.User.isAdmin){
+        if(req.user.role === "admin"){
+            console.log("Admins can proceed");
             next();
         }else{
-            res.status(403).json("You are not authorised to do that!")
+            console.log("Not an Admin");
+            res.status(403).json("You are not authorised to do that").end()
         }
     })
 }

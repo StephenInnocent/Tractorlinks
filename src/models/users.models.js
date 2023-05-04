@@ -23,15 +23,15 @@ const userSchema = new Schema({
         required: true,
         type:String,
         default: "Farmer",
-        enum: ["Farmer","Tractor Owner"]
+        enum: ["Farmer","Tractor Owner","Admin"]
     },
     tractors: Number,
     ordersCompleted: Number,
     pendingOrders: Number,
-    isAdmin: {
-        type: Boolean,
-        default: false
-    },
+    // isAdmin: {
+    //     type: Boolean,
+    //     default: false
+    // },
     accessToken: String,
 },{timestamps:true});
 
