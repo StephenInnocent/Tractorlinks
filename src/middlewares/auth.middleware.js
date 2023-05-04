@@ -20,7 +20,7 @@ const verifyToken = (req,res,next) => {
 }
 const verifyTokenAndAuthorisation = (req,res,next) => {
     verifyToken(req,res, ()=> {
-        if(req.user.id === req.params.id){
+        if(req.params.id){
             console.log("Authorised!");
             next();
         }else{
