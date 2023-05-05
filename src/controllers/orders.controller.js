@@ -24,7 +24,7 @@ async function updateOrder(req,res){
 }
 
 async function deleteOrder(req,res){
-    res.send(`Your request to delete ${req.params.serviceID} order has been received. Email confirmation will be sent to you when the request has been completed`).end()
+    res.send(`Your request to delete ${req.params.serviceID} order has been received. Email confirmation will be sent to you when the request has been completed. Thank you.`).end()
 };
 
 module.exports = {

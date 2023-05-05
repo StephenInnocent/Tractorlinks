@@ -5,7 +5,11 @@ const orderSchema = new Schema({
     contact: Number,
     location: String,
     date: String,
-    class: Array,
+    class: {
+        type: String,
+        // default: "Tractor Hiring",
+        // enum: ["Tractor Hiring","Agro chemicals","Extension services"]
+    },
     belongsTo: String,
     status: {
         type: String,
