@@ -3,16 +3,21 @@ const {model, Schema, trusted} = require("mongoose")
 const userSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        min: 3,
+        max: 30
     },
     password: {
         type: String,
         required: true,
+        min: 6,
+        max: 32
     },
     email: {
         type: String,
         unique:true,
-        required:true
+        required:true,
+        
     },
     phoneNumber:{
         type: Number,

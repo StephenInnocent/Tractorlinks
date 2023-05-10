@@ -4,7 +4,7 @@
   "description": "tractorlinks",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "keywords": [
     "test",
@@ -17,8 +17,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "fastest": "^1.0.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.4",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "validator": "^13.9.0"
   }
 }
