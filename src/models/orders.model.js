@@ -7,8 +7,8 @@ const orderSchema = new Schema({
     date: String,
     class: {
         type: String,
-        // default: "Tractor Hiring",
-        // enum: ["Tractor Hiring","Agro chemicals","Extension services"]
+        default: "Tractor Hiring",
+        // enum: ["Tractor-Hiring","Agro-chemicals","Extension-services"]
     },
     belongsTo: String,
     status: {

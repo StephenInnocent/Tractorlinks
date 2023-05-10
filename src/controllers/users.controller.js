@@ -1,4 +1,5 @@
 const {userModel} = require("../models/users.models");
+const {adminReqModel} = require("../models/adminReq.models")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -59,19 +60,28 @@ async function updateUser(req,res){
     
 };
 
-async function deleteAccount(req,res){
-    res.json("Your request to delete your account is pending approval by Admin. Email notification will be sent to you. Thank you.")
-    res.end();
-}
-
-async function deleteUser(req,res){
+async function deleteAccountRequest(req,res){
     try{
-        await userModel.findByIdAndDelete(req.body.id)
-        res.status(200).json("User has been deleted succesfully...")
+        const Maker = await userModel.findOne({_id:req.params.id});
+        if(Maker){
+            await adminReqModel.create({
+                name: Maker.name,
+                objectId: req.params.id,
+                email: Maker.email,
+                // description: req.query.description,
+                reason: req.body.reason
+            })
+        } else(e) => {
+            console.log("Request Maker not found");
+            res.status(500).end()
+        }
+
+        res.json("Your request to delete your account is pending approval by Admin. Email notification will be sent to you. Thank you.")
+        res.end();
     } catch(e){
-        res.status(500).json(e)
+        res.status(500).json("Sorry! Could'nt make delete request.")
     }
-};
+}
 
 
 async function login(req, res) {
@@ -111,8 +121,7 @@ async function getAllUsers(){
 module.exports = {
     register,
     updateUser,
-    deleteUser,
     login,
     getAllUsers,
-    deleteAccount
+    deleteAccountRequest
 }

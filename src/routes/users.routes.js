@@ -1,13 +1,15 @@
 const {Router} = require("express");
-const {register, deleteUser, updateUser, login, deleteAccount} = require("../controllers/users.controller");
-const {verifyToken, verifyTokenAndAdmin,verifyTokenAndAuthorisation} = require("../middlewares/auth.middleware")
+const {register,updateUser, login, deleteAccountRequest} = require("../controllers/users.controller");
+const {verifyTokenAndAuthorisation} = require("../middlewares/auth.middleware")
+
+
+
 const router = Router();
 
 router.post("/register", register);
 router.put("/:id", verifyTokenAndAuthorisation, updateUser);
-router.delete("/:id", deleteAccount)
-router.delete("/auth/:id", deleteUser);
-router.post("/auth/login", login)
+router.post("/:id", verifyTokenAndAuthorisation,deleteAccountRequest)
+router.post("/login/:id", login)
 
 module.exports = {
     userRouter: router

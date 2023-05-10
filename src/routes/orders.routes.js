@@ -1,11 +1,14 @@
 const {Router} = require("express");
-const {makeOrder, updateOrder, deleteOrder} = require("../controllers/orders.controller")
+const {makeOrder, updateOrder, deleteOrderRequest} = require("../controllers/orders.controller")
+const {verifyTokenAndAdmin, verifyTokenAndAuthorisation} = require("../middlewares/auth.middleware")
+
 
 const router = Router();
 
-router.post("/:userID/:serviceID", makeOrder);
-router.patch("/:userID/:serviceID", updateOrder);
-router.delete("/:userID/:serviceID", deleteOrder)
+router.post("/:id/:serviceID", verifyTokenAndAuthorisation,makeOrder);
+router.patch("/:id/:serviceID", verifyTokenAndAuthorisation,updateOrder);
+router.post("/:id/delete/:serviceID", verifyTokenAndAuthorisation,deleteOrderRequest);
+
 
 module.exports = {
     orderRouter: router
