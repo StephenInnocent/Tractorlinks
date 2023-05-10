@@ -9,7 +9,7 @@ const router = Router();
 router.post("/register", register);
 router.put("/:id", verifyTokenAndAuthorisation, updateUser);
 router.post("/:id", verifyTokenAndAuthorisation,deleteAccountRequest)
-router.post("/login/:id", login)
+router.post("/login", login)
 
 module.exports = {
     userRouter: router
