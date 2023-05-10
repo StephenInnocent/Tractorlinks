@@ -4,7 +4,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 async function register(req, res) {
+
     const salt = bcrypt.genSaltSync(10);
+
     const encryptedPassword = bcrypt.hashSync(req.body.password, salt);
 
     try{
@@ -15,6 +17,7 @@ async function register(req, res) {
             phoneNumber: req.body.phoneNumber,
             role: req.body.role,
         });
+
         const user = userModel.findOne({name:req.body.name});
 
         const accessToken = jwt.sign({
@@ -24,8 +27,8 @@ async function register(req, res) {
         {expiresIn:"2d"});
 
         console.log(accessToken);
-        await userModel.findOneAndUpdate({name:req.body.name});
-        res.send(`Succesfully registered!`).end();
+        
+        res.send(`Succesfully registered!`).status(200).json(user).end();
     } catch(e){
         console.log('an error ocurred',e);
         res.status(500).send(`User registration failed. please retry`).end()
@@ -95,14 +98,15 @@ async function login(req, res) {
 
         if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Password incorrect!!").end();
         
-        const accessToken = jwt.sign({
-            id: user._id,
-            isAdmin: user.isAdmin,
-        }, process.env.JWT_SEC,
-        {expiresIn:"2d"})
-        user.password = undefined;
+        // const accessToken = jwt.sign({
+        //     id: user._id,
+        //     isAdmin: user.isAdmin,
+        // }, process.env.JWT_SEC,
+        // {expiresIn:"2d"})
+
+        // user.password = undefined;
         
-        res.json({user, accessToken}).end();
+        res.json({user}).end();
 
         } catch(err){
             res.status(500).json(err).end()

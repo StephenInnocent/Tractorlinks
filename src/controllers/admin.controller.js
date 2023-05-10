@@ -13,11 +13,11 @@ async function deleteUser(req,res){
 
 async function deleteOrder(req,res){
     try{
-        const maker = await orderModel.findOne({_id:req.params.serviceID})
+        const reqorder = await adminReqModel.findOne({_id: req.params.requestID})
         console.log("Located order to be deleted");
         
-        await orderModel.deleteOne({name:maker.name, contact:maker.contact});
-        await adminReqModel.deleteOne({objectId: req.params.serviceID})
+        await orderModel.deleteOne({_id:reqorder.objectId});
+        await adminReqModel.deleteOne({_id:req.params.requestID})
         console.log("Order deleted. Email verification follows");
         res.status(200).json("Order has been deleted succesfully...")
     } catch(e){

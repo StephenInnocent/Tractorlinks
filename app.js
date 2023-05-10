@@ -12,12 +12,14 @@ require('dotenv').config();
 
 const MONGO_URL = process.env.MONGO_URL;
 
+
+
 app.use(express.static("public"))
 app.use(express.json());
 app.use(cors());
 app.use("/orders", orderRouter);
 app.use("/users", userRouter);
-app.use("/users/admin", adminRouter)
+app.use("/admin", adminRouter)
 
 
 app.get("/", (req,res) => {

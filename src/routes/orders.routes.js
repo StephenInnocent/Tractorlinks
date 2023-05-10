@@ -6,8 +6,8 @@ const {verifyTokenAndAdmin, verifyTokenAndAuthorisation} = require("../middlewar
 const router = Router();
 
 router.post("/:id/:serviceID", verifyTokenAndAuthorisation,makeOrder);
-router.patch("/:id/:serviceID", verifyTokenAndAuthorisation,updateOrder);
-router.post("/:id/delete/:serviceID", verifyTokenAndAuthorisation,deleteOrderRequest);
+router.put("/:id/:serviceID", verifyTokenAndAuthorisation,updateOrder);
+router.delete("/:id/:serviceID", verifyTokenAndAuthorisation,deleteOrderRequest);
 
 
 module.exports = {

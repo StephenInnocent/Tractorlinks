@@ -13,8 +13,8 @@ const orderSchema = new Schema({
     belongsTo: String,
     status: {
         type: String,
-        default:"pending",
-        enum: ["pending","completed"]
+        default:"processing",
+        enum: ["processing","pending","completed"]
     }
 },{timestamps:true})
 

@@ -7,8 +7,8 @@ router.get("/:id", verifyTokenAndAdmin, ()=>{
     console.log("Welcome to Admin page")
     res.status(200).json("Welcome Admin")
 });
-router.post("/:id/:serviceID", verifyTokenAndAdmin, deleteOrder);
-router.post("/:id/:objectId", verifyTokenAndAdmin, deleteUser);
+router.delete("/:id/:requestID", verifyTokenAndAdmin, deleteOrder);
+router.delete("/:id/:objectId", verifyTokenAndAdmin, deleteUser);
 
 
 
