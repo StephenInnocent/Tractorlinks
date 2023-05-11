@@ -1,8 +1,30 @@
-const {z} = require("zod");
+const {z, string} = require("zod");
 
-const makeOrderSchema = z.object({
+const makeOrderValidator = z.object({
     name: z.string().max(36),
     location: z.string(),
     date: z.date(),
-    contact: z.string().min(9)
+    contact: z.string().min(9),
+    class: z.string(),
+    orderedBy: z.string()
 })
+
+
+const updateValidator = z.object({
+    name: z.string().max(36),
+    location: z.string(),
+    date: z.date(),
+    contact: z.string().min(9),
+    class: z.string(),
+    orderedBy: z.string()
+})
+
+const deleteValidator = z.object({
+    reason: z.string().min(5)
+})
+
+module.exports={
+    makeOrderValidator,
+    deleteValidator,
+    updateValidator
+}

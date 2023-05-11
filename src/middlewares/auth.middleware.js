@@ -9,10 +9,13 @@ const verifyToken = (req,res,next) => {
     if(authHeader) {
         const token = authHeader.split(" ")[1]
         jwt.verify(token,process.env.JWT_SEC, (err,User) =>{
-            if (err) res.status(403).json("Token is not valid");
-            req.user = User;
-            console.log("token verified");
-            next();
+            if (err) res.status(403).json("Token is not valid").end()
+            else{
+                req.user = User;
+                console.log("token verified");
+                next();
+            };
+            
         })
     } else{
         res.status(401).json("Please provide token!").end();
@@ -24,7 +27,7 @@ const verifyTokenAndAuthorisation = (req,res,next) => {
             console.log("Authorised!");
             next();
         }else{
-            res.status(403).json("You are not authorised to do that!")
+            res.status(403).json("You are not authorised to do that!").end()
         }
     })
 }

@@ -1,14 +1,30 @@
 const {model, Schema} = require("mongoose")
 
 const orderSchema = new Schema({
-    name: String,
-    contact: Number,
-    location: String,
-    date: String,
+    name: {
+        type: String,
+        required:true,
+        min: 6,
+    },
+    contact: {
+        type: Number,
+        required:true,
+        min: 6,
+    },
+    location: {
+        type: String,
+        required:true,
+        min: 6,
+    },
+    date: {
+        type: Date,
+        required:true,
+        min: 6,
+    },
     class: {
         type: String,
         default: "Tractor Hiring",
-        // enum: ["Tractor-Hiring","Agro-chemicals","Extension-services"]
+        enum: ["Tractor-Hiring","Fertilisers","Training","Dairy","seedlings","Livestock Management"]
     },
     orderedBy: String,
     status: {

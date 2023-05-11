@@ -26,12 +26,34 @@ async function deleteOrder(req,res){
         console.log("Order deleted. Email verification follows");
         res.status(200).json("Order has been deleted succesfully...")
     } catch(e){
-        res.status(500).json(e)
+        res.status(500).json(e).end()
     }
 };
+
+async function getAllUsers(){
+    try{
+        const users = await userModel.find();
+        res.status(200).json(users).end()
+    } catch(e){
+        res.status(500).json(e).end();
+    }
+}
+
+async function getSingleUser(){
+    try{
+        const user = await userModel.findById(req.body.id);
+        
+        res.status(200).json(user).end();
+    }catch(e){
+        res.status(500).json(e).end()
+    }
+}
+
 
 
 module.exports = {
     deleteUser,
-    deleteOrder
+    deleteOrder,
+    getAllUsers,
+    getSingleUser
 }
