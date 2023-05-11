@@ -4,8 +4,13 @@ const {adminReqModel} = require("../models/adminReq.models")
 
 async function deleteUser(req,res){
     try{
-        await userModel.findByIdAndDelete(req.params.objectId)
-        res.status(200).json("User has been deleted succesfully...")
+        const reqorder = await adminReqModel.findOne({_id: req.params.requestID})
+        console.log("Located order to be deleted");
+        
+        await orderModel.deleteOne({_id:reqorder.objectId});
+        await adminReqModel.deleteOne({_id:req.params.requestID})
+        console.log("Order deleted. Email verification follows");
+        res.status(200).json("Order has been deleted succesfully...")
     } catch(e){
         res.status(500).json(e)
     }
@@ -14,9 +19,9 @@ async function deleteUser(req,res){
 async function deleteOrder(req,res){
     try{
         const reqorder = await adminReqModel.findOne({_id: req.params.requestID})
-        console.log("Located order to be deleted");
+        console.log("Located delete-account-request to be deleted");
         
-        await orderModel.deleteOne({_id:reqorder.objectId});
+        await userModel.deleteOne({_id:reqorder.objectId});
         await adminReqModel.deleteOne({_id:req.params.requestID})
         console.log("Order deleted. Email verification follows");
         res.status(200).json("Order has been deleted succesfully...")

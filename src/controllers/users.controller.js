@@ -2,9 +2,19 @@ const {userModel} = require("../models/users.models");
 const {adminReqModel} = require("../models/adminReq.models")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const validator = require("../middlewares/validation/users.validators")
+const errormessage = require("../middlewares/utilities/errormessage")
+
 
 async function register(req, res) {
 
+    const result = validator.registerValidator.safeParse(req.body);
+
+    console.log(result.success);
+    if (!result.success){
+        return res.status(400).json(errormessage.formatZodError(result.error)).end();
+    }
+//formatZodError(result.error.issues)
     const salt = bcrypt.genSaltSync(10);
 
     const encryptedPassword = bcrypt.hashSync(req.body.password, salt);
@@ -28,7 +38,7 @@ async function register(req, res) {
 
         console.log(accessToken);
         
-        res.send(`Succesfully registered!`).status(200).json(user).end();
+        res.send(`Succesfully registered!`).status(200).end();
     } catch(e){
         console.log('an error ocurred',e);
         res.status(500).send(`User registration failed. please retry`).end()
@@ -88,30 +98,42 @@ async function deleteAccountRequest(req,res){
 
 
 async function login(req, res) {
-    try{
-        const user = await userModel.findOne({email:req.body.email});
-        console.log("user located with email");
+    const validatedData = validator.loginValidator.safeParse(req.body);
+    //console.log(validatedData)
+    if(!validatedData.success){
+        res.status(400).json(errormessage.formatZodError(validatedData.error)).end()
+    } else {
+        try{
 
-        if (!user) return res.status(401).json("Wrong Credentials").end();
+            const user = await userModel.findOne({email:req.body.email});
+    
+            if (!user) return res.status(401).json("Wrong Credentials").end();
 
-        console.log(`User with username '${user.name}' found`);
+            else{
+                
+                console.log(`User with username '${user.name}' found`);
+    
+            }
+    
+            if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Password incorrect!!").end();
+            
+            // const accessToken = jwt.sign({
+            //     id: user._id,
+            //     isAdmin: user.isAdmin,
+            // }, process.env.JWT_SEC,
+            // {expiresIn:"2d"})
+    
+            // user.password = undefined;
+            
+            res.json({user}).end();
+    
+            } catch(err){
+                res.status(500).json(err).end()
+            };
+    };
+    
+}
 
-        if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Password incorrect!!").end();
-        
-        // const accessToken = jwt.sign({
-        //     id: user._id,
-        //     isAdmin: user.isAdmin,
-        // }, process.env.JWT_SEC,
-        // {expiresIn:"2d"})
-
-        // user.password = undefined;
-        
-        res.json({user}).end();
-
-        } catch(err){
-            res.status(500).json(err).end()
-        };
-};
 
 async function getAllUsers(){
     try{

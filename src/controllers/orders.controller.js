@@ -10,7 +10,7 @@ async function makeOrder(req,res){
             contact: req.body.contact,
             date: req.body.date,
             class: req.params.serviceID,
-            OrderedBy: req.params.id
+            orderedBy: req.params.id
         }).then(() => {
             console.log(`${req.params.serviceID} order by ${req.params.id} was succesfull`)
         }).catch((e) => {

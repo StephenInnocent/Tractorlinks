@@ -10,7 +10,7 @@ const orderSchema = new Schema({
         default: "Tractor Hiring",
         // enum: ["Tractor-Hiring","Agro-chemicals","Extension-services"]
     },
-    belongsTo: String,
+    orderedBy: String,
     status: {
         type: String,
         default:"processing",

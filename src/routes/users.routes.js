@@ -7,8 +7,8 @@ const router = Router();
 
 router.post("/register", register);
 router.put("/:id", verifyTokenAndAuthorisation, updateUser);
-router.post("/:id", verifyTokenAndAuthorisation,deleteAccountRequest)
-router.post("/login",login)
+router.delete("/:id", verifyTokenAndAuthorisation,deleteAccountRequest)
+router.post("/login",login);
 
 module.exports = {
     userRouter: router
