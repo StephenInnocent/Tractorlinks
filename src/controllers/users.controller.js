@@ -47,38 +47,54 @@ async function register(req, res) {
 
 async function updateUser(req,res){
 
+    try{
+        const result = validator.updateValidator.safeParse(req.body);
 
-    if (req.body.password){
-        const salt = bcrypt.genSaltSync(10);
-        const updatedPassword = bcrypt.hashSync(req.body.password, salt)
-        req.body.password = updatedPassword;
+        console.log(result.success);
 
-        try{
-           const updatedUser = await userModel.findOneAndUpdate({_id: req.params.id}, {...req.body});
-           updatedUser.password = undefined;
-           updatedUser.phoneNumber = undefined;
-           updatedUser.email = undefined;
-
-
-           
-          
-           
-            console.log("Profile successfully updated");
-            res.status(200).json({updatedUser,message:"Refresh to view changes"}).end()
-               
-           
-
-           
-           
-        } catch(e){
-            res.status(500)
-            console.log(e);
-        } finally{
-            res.end()
+        if (!result.success){
+            return res.status(400).json(errormessage.formatZodError(result.error)).end();
+        } else{
+            if (req.body.password){
+                const salt = bcrypt.genSaltSync(10);
+                const updatedPassword = bcrypt.hashSync(req.body.password, salt)
+                req.body.password = updatedPassword;
+        
+                try{
+                   const updatedUser = await userModel.findOneAndUpdate({_id: req.params.id}, {...req.body});
+                   updatedUser.password = undefined;
+                   updatedUser.phoneNumber = undefined;
+                   updatedUser.email = undefined;
+        
+        
+                   
+                  
+                   
+                    console.log("Profile successfully updated");
+                    res.status(200).json({updatedUser,message:"Refresh to view changes"}).end()
+                       
+                   
+        
+                   
+                   
+                } catch(e){
+                    res.status(500).end()
+                    console.log(e);
+                } finally{
+                    res.end()
+                }
+        
+            } else{
+                res.status(500).end()
+            }
         }
-    } else{
-        res.status(500).end()
+    
+    } catch(e){
+        res.status(500).json(e).end()
     }
+
+
+    
 
     
 };
