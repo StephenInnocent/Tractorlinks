@@ -14,7 +14,7 @@ const MONGO_URL = process.env.MONGO_URL;
 
 
 
-app.use(express.static("public"))
+
 app.use(express.json());
 app.use(cors());
 app.use("/orders", orderRouter);
@@ -23,7 +23,7 @@ app.use("/admin", adminRouter)
 
 
 app.get("/", (req,res) => {
-    res.render("index")
+    res.send("Hello there!!! Tractorlinks backend is public!")
 })
 mongoose.connect(MONGO_URL).then(() => {
     app.listen(port, (req,res) =>{
