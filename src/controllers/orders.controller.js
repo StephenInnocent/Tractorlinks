@@ -23,12 +23,12 @@ async function makeOrder(req,res){
                 console.log(`${req.params.serviceID} order by ${req.params.id} was succesfull`)
             }).catch((e) => {
                 console.log(`An error occurred`,e);
-                res.status(500).json("Failed to create order");
+                res.status(500).json("Failed to create order").end();
             })
         
             res.send(`Order succesful`).end();
         } catch(e){
-            res.send(500).end();
+            res.status(500).end();
         }
     }
     
@@ -43,20 +43,18 @@ async function updateOrder(req,res){
         res.status(400).json(errormessage.formatZodError(result.error))
     } else{
         try{
-            await orderModel.findOneAndUpdate({_id:req.params.serviceID},{...req.body});
-        res.json("Order sucessfully updated").status(200).end();
+            const updatedOrder = await orderModel.findOneAndUpdate({_id:req.body.id},{...req.body});
+        res.json({message:"Order sucessfully updated!. Refresh to view changes ",updatedOrder}).status(200).end();
         } catch(e) {
             console.log(e);
             res.status(500).json("Update failed").end();
         }
     }
 
-    
-    
 }
 
 async function deleteOrderRequest(req,res){
-    const result = validator.deleteValidator.safeParse(req.body)
+    const result = validator.deleteValidator.safeParse(req.body,req.params)
 
     if(!result.success){
         res.status(400).json(errormessage.formatZodError(result.error))
@@ -68,13 +66,13 @@ async function deleteOrderRequest(req,res){
                     name: Maker.name,
                     objectId: req.params.serviceID,
                     email: Maker.email,
-                    // description: req.query.description,
+                    description: req.query.description,
                     reason: req.body.reason
                 })
             } else(e) => {
                 console.log("Request Maker not found");
                 res.status(500).end()
-            }
+            };
             
     
             res.send(`Your request to delete ${req.params.serviceID} order has been received. Email confirmation will be sent to you when the request has been completed. Thank you.`).end()
@@ -82,9 +80,6 @@ async function deleteOrderRequest(req,res){
             res.status(500).json("Sorry! Could'nt make delete request.")
         }
     }
-    
-    
-    
 };
 
 

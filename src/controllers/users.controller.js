@@ -10,7 +10,7 @@ async function register(req, res) {
     try{
         const result = validator.registerValidator.safeParse(req.body);
 
-        console.log(result.success);
+        console.log(`Validated:`.concat(result.success));
 
         if (!result.success){
             return res.status(400).json(errormessage.formatZodError(result.error)).end();
@@ -50,7 +50,8 @@ async function updateUser(req,res){
     try{
         const result = validator.updateValidator.safeParse(req.body);
 
-        console.log(result.success);
+        console.log(`validated:`.concat(result.success));
+        console.log(result.error);
 
         if (!result.success){
             return res.status(400).json(errormessage.formatZodError(result.error)).end();
@@ -67,21 +68,11 @@ async function updateUser(req,res){
                    updatedUser.email = undefined;
         
         
-                   
-                  
-                   
                     console.log("Profile successfully updated");
                     res.status(200).json({updatedUser,message:"Refresh to view changes"}).end()
-                       
-                   
-        
-                   
-                   
                 } catch(e){
                     res.status(500).end()
                     console.log(e);
-                } finally{
-                    res.end()
                 }
         
             } else{
@@ -93,33 +84,44 @@ async function updateUser(req,res){
         res.status(500).json(e).end()
     }
 
-
-    
-
-    
 };
 
 async function deleteAccountRequest(req,res){
-    try{
-        const Maker = await userModel.findOne({_id:req.params.id});
-        if(Maker){
-            await adminReqModel.create({
-                name: Maker.name,
-                objectId: req.params.id,
-                email: Maker.email,
-                // description: req.query.description,
-                reason: req.body.reason
-            })
-        } else(e) => {
-            console.log("Request Maker not found");
-            res.status(500).end()
-        }
+    const result = validator.deleteValidator.safeParse(req.body)
 
-        res.json("Your request to delete your account is pending approval by Admin. Email notification will be sent to you. Thank you.")
-        res.end();
-    } catch(e){
-        res.status(500).json("Sorry! Could'nt make delete request.")
+    if(!result.success){
+        res.status(400).json(errormessage.formatZodError(result.error)).end()
+        console.log(result.error);
+    } else{
+        try{
+            const Maker = await userModel.findOne({_id:req.params.id});
+            if(Maker){
+                console.log("makerpresent");
+                    const reqorder = await adminReqModel.create({
+                    name: Maker.name,
+                    objectId: req.params.id,
+                    email: Maker.email,
+                    description: req.params.description,
+                    reason: req.body.reason
+                });
+                if(reqorder){
+                    console.log("Request made");
+                    res.json("Your request to delete your account is pending approval by Admin. Email notification will be sent to you. Thank you.").end();
+                }else{
+                    console.log("Request not made");
+                    res.status(500).json("Request failed").end();
+                }
+            } else(e) => {
+                console.log("Request Maker not found");
+                res.status(500).end()
+            }
+    
+            
+        } catch(e){
+            res.status(500).json("Sorry! Could'nt make delete request.")
+        }
     }
+    
 }
 
 
@@ -158,7 +160,6 @@ async function login(req, res) {
             user.updatedAt = undefined;
         
 
-            
             res.json({user,accessToken}).end();
 
     

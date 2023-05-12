@@ -20,9 +20,15 @@ const loginValidator = z.object({
     email: z.string().email().includes("@"),
     password: z.string().min(6).max(36).trim()
 })
+
+const deleteValidator = z.object({
+   
+    reason: z.string()
+})
 module.exports = {
     registerValidator,
     updateValidator,
-    loginValidator
+    loginValidator,
+    deleteValidator
 }
 

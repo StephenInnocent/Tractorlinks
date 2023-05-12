@@ -1,32 +1,57 @@
 const {userModel} = require("../models/users.models");
 const {orderModel} = require("../models/orders.model");
-const {adminReqModel} = require("../models/adminReq.models")
+const {adminReqModel} = require("../models/adminReq.models");
+const validator = require("../middlewares/validation/admin.validation")
+const errormessage = require("../middlewares/utilities/errormessage")
 
 async function deleteUser(req,res){
-    try{
-        const reqorder = await adminReqModel.findOne({_id: req.params.requestID})
-        console.log("Located order to be deleted");
-        
-        await orderModel.deleteOne({_id:reqorder.objectId});
-        await adminReqModel.deleteOne({_id:req.params.requestID})
-        console.log("Order deleted. Email verification follows");
-        res.status(200).json("Order has been deleted succesfully...")
-    } catch(e){
-        res.status(500).json(e)
+
+    const result = validator.deleteUserValidator.safeParse(req.body)
+
+    console.log(`validated:`.concat(result.success))
+
+    if(!result.success){
+        res.status(400).json(errormessage.formatZodError(result.error)).end();
+    }else{
+        try{
+            const reqorder = await adminReqModel.findOne({_id:req.body.id})
+            console.log("Located delete-account-request to be deleted");
+            
+            await orderModel.deleteOne({_id:reqorder.objectId});
+
+            await adminReqModel.deleteOne({_id:req.body.id})
+            console.log("User deleted. Email verification follows");
+            res.status(200).json("User has been deleted succesfully...").end()
+        } catch(e){
+            res.status(500).json(e).end()
+        }   
     }
-};
+}
 
 async function deleteOrder(req,res){
-    try{
-        const reqorder = await adminReqModel.findOne({_id: req.params.requestID})
-        console.log("Located delete-account-request to be deleted");
-        
-        await userModel.deleteOne({_id:reqorder.objectId});
-        await adminReqModel.deleteOne({_id:req.params.requestID})
-        console.log("Order deleted. Email verification follows");
-        res.status(200).json("Order has been deleted succesfully...")
-    } catch(e){
-        res.status(500).json(e).end()
+    const result = validator.deleteOrderValidator.safeParse(req.body)
+
+    if(!result.success){
+        res.status(400).json(errormessage.formatZodError(result.error)).end();
+    } else{
+        try{
+            const reqorder = await adminReqModel.findOne({_id: req.body.id})
+            if(reqorder){
+                console.log("Located delete-order-request to be deleted");
+            } else{
+                console.log("cannot find the delete request");
+                res.status(400).json("Cannot order with such id").end()
+            }
+            
+
+            await userModel.deleteOne({_id:reqorder.objectId});
+
+            await adminReqModel.deleteOne({_id:req.body.id})
+            console.log("Order deleted. Email verification follows");
+            res.status(200).json("Order has been deleted succesfully...").end()
+        } catch(err){
+            res.status(500).json(err).end()
+        }
     }
 };
 
@@ -40,12 +65,19 @@ async function getAllUsers(){
 }
 
 async function getSingleUser(){
-    try{
-        const user = await userModel.findById(req.body.id);
-        
-        res.status(200).json(user).end();
-    }catch(e){
-        res.status(500).json(e).end()
+
+    const result = validator.getUserValidator.safeParse(req.params)
+
+    if(!result.success){
+        res.status(400).json(errormessage.formatZodError(result.error))
+    }else{
+        try{
+            const user = await userModel.findById(req.body.id);
+            
+            res.status(200).json(user).end();
+        }catch(e){
+            res.status(500).json(e).end()
+        }
     }
 }
 
