@@ -9,28 +9,45 @@
 <body>
     <h1>Tractorlinks</h1><sub>Bumper harvests...</sub>
     <p>This is a dummy to test my backend server</p>
+
+    <a href="https://tractorlinks.onrender.com/"><button title="go">Go to backend</button></a>
     <p>registration</p>
     <div>
-        <form action="/users/register" method="post">
+        <form action="https://tractorlinks.onrender.com/users/register" method="post">
             <label>Name</label>
-            <input type="text" placeholder="userName">
+            <input type="text" placeholder="Name">
             <input type="email" placeholder="email">
-            <input type="text" placeholder="Role">
-            <input type="number" placeholder="number">
+            <input type="text" placeholder="role">
+            <input type="number" placeholder="phoneNumber">
             <input type="password" placeholder="password">
-            <button title="submit" type="submit"></button>
+            <button title="submit" type="submit">Submit</button>
         </form>
     </div>
+    <hr>
 
     <p>login</p>
-    <form action="/users/register" method="post">
+    <form action="https://tractorlinks.onrender.com/users/login" method="post">
     <label>Email</label>
     <input type="email" placeholder="Email">
     <input type="password" placeholder="password">
-    <button title="submit" type="submit"></button>
+    <button title="submit" type="submit">Submit</button>
     </form>
+    <hr>
 
     <p>Create order</p>
+    <div>
+        <form action="/:id/Tractor-Hiring" method="post">
+            <label>Name</label>
+            <input type="text" placeholder="Name">
+            <input type="email" placeholder="location">
+            <input type="text" placeholder="state">
+            <input type="number" placeholder="contact">
+            <input type="text" placeholder="LGA">
+            <input type="date" placeholder="date">
+            <button title="submit" type="submit">Submit</button>
+        </form>
+    </div><hr>
+    <p>Update order</p>
     <div>
         <form action="/users/register" method="post">
             <label>Name</label>
@@ -39,7 +56,7 @@
             <input type="text" placeholder="Role">
             <input type="number" placeholder="number">
             <input type="password" placeholder="password">
-            <button title="submit" type="submit"></button>
+            <button title="submit" type="submit">Submit</button>
         </form>
     </div>
 </body>

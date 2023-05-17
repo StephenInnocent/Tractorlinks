@@ -17,9 +17,8 @@ const orderSchema = new Schema({
         min: 6,
     },
     date: {
-        type: String,
+        type: Date,
         required:true,
-        min: 6,
     },
     class: {
         type: String,

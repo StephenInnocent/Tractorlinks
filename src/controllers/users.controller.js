@@ -207,11 +207,38 @@ async function login(req, res) {
     
 }
 
+async function availableTractors(req,res){
+    try{
+        const tractors = await userModel.find({statesOfOperation:req.body.state,LGAsOfOperation:req.body.LGA});
+
+        if(tractors){
+            const no = tractors.length
+
+           
+            
+            tractors.password = undefined;
+            tractors.phoneNumber = undefined;
+            tractors.email = undefined;
+            tractors._id = undefined;
+            tractors.comments = undefined;
+            tractors.reviews = undefined;
+            tractors.fundsMade = undefined;
+
+            res.status(200).json(tractors).end()
+        } else{
+            res.status(200).json("No tractors are available").end()
+        }
+    } catch(e){
+        res.status(500).json({e}).end();
+    }
+    
+}
 
 
 module.exports = {
     register,
     updateUser,
     login,
-    deleteAccountRequest
+    deleteAccountRequest,
+    availableTractors
 }
