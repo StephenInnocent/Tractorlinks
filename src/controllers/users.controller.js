@@ -90,35 +90,66 @@ async function updateUser(req,res){
 };
 
 async function deleteAccountRequest(req,res){
+    
     const result = validator.deleteValidator.safeParse(req.body)
 
     if(!result.success){
         res.status(400).json(errormessage.formatZodError(result.error)).end()
         console.log(result.error);
+       
     } else{
         try{
-            const Maker = await userModel.findOne({_id:req.params.id});
-            
-            if(Maker){
-                console.log("makerpresent");
+            try{
+                const Maker = await userModel.findById(req.params.id);
+
+                if(Maker){
+                    console.log("omo request running o!");
+                    console.log("Maker present");
                     const reqorder = await adminReqModel.create({
                     name: Maker.name,
                     objectId: req.params.id,
                     email: Maker.email,
                     description: req.params.description,
                     reason: req.body.reason
-                });
-                if(reqorder){
-                    console.log("Request made");
-                    res.json("Your request to delete your account is pending approval by Admin. Email notification will be sent to you. Thank you.").end();
-                }else{
-                    console.log("Request not made");
-                    res.status(500).json("Request failed").end();
+                    });
+                    if(reqorder){
+                        console.log("Request made");
+                        res.json("Your request to delete your account is pending approval by Admin. Email notification will be sent to you. Thank you.").end();
+                    }else{
+                        console.log("Request not made");
+                        res.status(500).json("Request failed").end();
+                    }
+                } else{
+                    console.log("Request Maker not found");
+                    res.status(500).json("Request Maker not found").end();
                 }
-            } else(e) => {
-                console.log("Request Maker not found");
-                res.status(500).end()
+                   
+            } catch{
+                res.status(500).end();
             }
+            
+            
+            // if(Maker){
+            //     console.log("omo request running o!");
+            //         console.log("Maker present");
+            //         const reqorder = await adminReqModel.create({
+            //         name: Maker.name,
+            //         objectId: req.params.id,
+            //         email: Maker.email,
+            //         description: req.params.description,
+            //         reason: req.body.reason
+            //     });
+            //     if(reqorder){
+            //         console.log("Request made");
+            //         res.json("Your request to delete your account is pending approval by Admin. Email notification will be sent to you. Thank you.").end();
+            //     }else{
+            //         console.log("Request not made");
+            //         res.status(500).json("Request failed").end();
+            //     }
+            // } else(e) => {
+            //     console.log("Request Maker not found");
+            //     res.status(500).end()
+            // }
     
             
         } catch(e){
@@ -130,6 +161,7 @@ async function deleteAccountRequest(req,res){
 
 
 async function login(req, res) {
+
     const validatedData = validator.loginValidator.safeParse(req.body);
     //console.log(validatedData)
     if(!validatedData.success){
@@ -147,7 +179,7 @@ async function login(req, res) {
     
             }
     
-            if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Password incorrect!!").end();
+            if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Incorrect Password!").end();
             
             const accessToken = jwt.sign({
                 id: user._id,

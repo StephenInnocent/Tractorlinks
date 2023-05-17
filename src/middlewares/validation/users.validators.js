@@ -24,7 +24,7 @@ const loginValidator = z.object({
 
 const deleteValidator = z.object({
    
-    reason: z.string()
+    reason: z.string().min(3)
 })
 module.exports = {
     registerValidator,

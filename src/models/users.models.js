@@ -31,7 +31,7 @@ const userSchema = new Schema({
         enum: ["Farmer","Tractor Owner","Admin"]
     },
     statesOfOperation: {
-        type: String
+        type: Array
     },
     LGAsOfOperation: {
         type: Array

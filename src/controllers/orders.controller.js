@@ -60,22 +60,31 @@ async function deleteOrderRequest(req,res){
         res.status(400).json(errormessage.formatZodError(result.error))
     } else{
         try{
-            const Maker = await userModel.findOne({_id:req.params.id});
-            if(Maker){
-                await adminReqModel.create({
-                    name: Maker.name,
-                    objectId: req.params.serviceID,
-                    email: Maker.email,
-                    description: req.query.description,
-                    reason: req.body.reason
-                })
-            } else(e) => {
-                console.log("Request Maker not found");
-                res.status(500).end()
-            };
+            try{
+                const Maker = await userModel.findOne({_id:req.params.id});
+                if(Maker){
+                    let order = await orderModel.findById(req.params.serviceID);
+                    if(!order){
+                        res.status(500).json("Order to be deleted not found!")
+                    } else{
+                        await adminReqModel.create({
+                            name: Maker.name,
+                            objectId: req.params.serviceID,
+                            email: Maker.email,
+                            description: req.query.description,
+                            reason: req.body.reason
+                        })
+                        res.send(`Your request to delete ${req.params.serviceID} order has been received. Email confirmation will be sent to you when the request has been completed. Thank you.`).end()
+                    }
+                } else{
+                    console.log("Request Maker not found");
+                    res.status(500).json("Request Maker not found").end()
+                }
+            }catch(e){
+                res.json(e).status(500).end()
+            }
             
     
-            res.send(`Your request to delete ${req.params.serviceID} order has been received. Email confirmation will be sent to you when the request has been completed. Thank you.`).end()
         } catch(e){
             res.status(500).json("Sorry! Could'nt make delete request.")
         }

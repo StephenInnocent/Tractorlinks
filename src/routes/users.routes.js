@@ -7,7 +7,7 @@ const router = Router();
 
 router.post("/register", register);
 router.put("/:id", verifyTokenAndAuthorisation, updateUser);
-router.delete("/:id/:description", verifyTokenAndAuthorisation,deleteAccountRequest)
+router.delete("/:id/deleteMyAccount", verifyTokenAndAuthorisation,deleteAccountRequest)
 router.post("/login",login);
 
 module.exports = {
