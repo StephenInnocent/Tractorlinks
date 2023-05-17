@@ -1,10 +1,10 @@
-const {model, Schema, trusted} = require("mongoose")
+const {model, Schema, trusted} = require("mongoose");
 
 const userSchema = new Schema({
     name: {
         type: String,
         required: true,
-        min: 3,
+        min: 6,
         max: 30
     },
     password: {
@@ -30,14 +30,34 @@ const userSchema = new Schema({
         default: "Farmer",
         enum: ["Farmer","Tractor Owner","Admin"]
     },
-    tractors: Number,
+    statesOfOperation: {
+        type: String
+    },
+    LGAsOfOperation: {
+        type: Array
+    },
+    services:{
+        type: Array
+    },
+    workingDays: {
+        type: Array
+    },
+    incomingFunds: {
+        type: Number,
+    },
+    fundsMade: {
+        type: Number
+    },
+    comments:{
+        type: Array
+    },
+    Reviews: {
+        type: Array
+    },
+    noOfTractors: Number,
     ordersCompleted: Number,
     pendingOrders: Number,
-    // isAdmin: {
-    //     type: Boolean,
-    //     default: false
-    // },
-    accessToken: String,
+    
 },{timestamps:true});
 
 const userModel = model("User", userSchema)

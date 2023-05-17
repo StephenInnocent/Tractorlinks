@@ -31,8 +31,11 @@ async function register(req, res) {
 
             const user = await userModel.findOne({name:req.body.name});
 
-            
-            res.send(`Succesfully registered!`).status(200).end();
+            if(!user){
+                res.status(500).send(`User registration failed. please retry`).end()
+            } else{
+                res.send(`Succesfully registered!`).status(200).end();
+            }
 
             }catch(e){
                 console.log('an error ocurred',e);

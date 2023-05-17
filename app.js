@@ -27,7 +27,7 @@ app.get("/", (req,res) => {
 })
 mongoose.connect(MONGO_URL).then(() => {
     app.listen(port, (req,res) =>{
-        console.log(`express server running at port ${port}`)
+        console.log(`Express server running at port ${port}`)
     })
 }).catch((e)=>{
     console.log("A MongoDB connection error occured",e);

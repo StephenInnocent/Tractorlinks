@@ -5,7 +5,12 @@ const adminReqSchema = new Schema({
        objectId: String,
        email: String,
        description: String,
-       reason: String
+       reason: String,
+       status: {
+        type: String,
+        enum: ["Pending","Processed"],
+        default: "Pending"
+       } 
 },{timestamps: true})
 
 const adminReqModel = model("adminReq", adminReqSchema);
