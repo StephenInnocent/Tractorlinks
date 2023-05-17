@@ -102,9 +102,9 @@ async function getAllUsers(){
     }
 }
 
-async function getSingleUser(){
+async function getSingleUser(req,res){
 
-    const result = validator.getUserValidator.safeParse(req.params)
+    const result = validator.getUserValidator.safeParse()
 
     if(!result.success){
         res.status(400).json(errormessage.formatZodError(result.error))

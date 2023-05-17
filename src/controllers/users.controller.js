@@ -49,9 +49,10 @@ async function register(req, res) {
 };
 
 async function updateUser(req,res){
+    
 
     try{
-        const result = validator.updateValidator.safeParse(req.body);
+        const result = validator.updateValidator.safeParse(req.params);
 
         console.log(`validated:`.concat(result.success));
         console.log(result.error);
@@ -59,11 +60,13 @@ async function updateUser(req,res){
         if (!result.success){
             return res.status(400).json(errormessage.formatZodError(result.error)).end();
         } else{
-            if (req.body.password){
-                const salt = bcrypt.genSaltSync(10);
-                const updatedPassword = bcrypt.hashSync(req.body.password, salt)
-                req.body.password = updatedPassword;
-        
+                if(req.body.password){
+                    const salt = bcrypt.genSaltSync(10);
+                    const updatedPassword = bcrypt.hashSync(req.body.password, salt)
+                    req.body.password = updatedPassword;
+                }
+                
+                console.log("functioning");
                 try{
                    const updatedUser = await userModel.findOneAndUpdate({_id: req.params.id}, {...req.body});
                    updatedUser.password = undefined;
@@ -74,13 +77,10 @@ async function updateUser(req,res){
                     console.log("Profile successfully updated");
                     res.status(200).json({updatedUser,message:"Refresh to view changes"}).end()
                 } catch(e){
-                    res.status(500).end()
+                    res.status(500).json("Update failed").end()
                     console.log(e);
                 }
         
-            } else{
-                res.status(500).end()
-            }
         }
     
     } catch(e){
@@ -181,13 +181,14 @@ async function login(req, res) {
     
             if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Incorrect Password!").end();
             
-            const accessToken = jwt.sign({
-                id: user._id,
-                isAdmin: user.isAdmin,
-            }, process.env.JWT_SEC,
-            {expiresIn:"2d"})
+            // const accessToken = jwt.sign({
+            //     id: user._id,
+            //     isAdmin: user.isAdmin,
+            // }, process.env.JWT_SEC,
+            // {expiresIn:"2d"})
     
-            console.log(accessToken);
+            // console.log(accessToken);
+            //accessToken
 
             user.password = undefined;
             user.email = undefined;
@@ -196,7 +197,7 @@ async function login(req, res) {
             user.updatedAt = undefined;
         
 
-            res.json({user,accessToken}).end();
+            res.json({user}).end();
 
     
             } catch(err){
