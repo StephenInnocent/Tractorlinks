@@ -7,12 +7,15 @@ const {userRouter} = require("./src/routes/users.routes");
 const {orderRouter} = require("./src/routes/orders.routes");
 const {adminRouter} = require("./src/routes/admin.routes");
 const cors = require("cors");
+const session = require("express-session")
 require('dotenv').config();
 const helmet = require("helmet")
 
 const MONGO_URL = process.env.MONGO_URL;
 
-app.use(cors());
+app.use(cors({
+    origin:"*"
+}));
 app.use(helmet())
 app.use(express.json());
 
