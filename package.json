@@ -1,7 +1,7 @@
 {
-  "name": "noma-app",
+  "name": "tractorlinks",
   "version": "1.0.0",
-  "description": "tractorlinks",
+  "description": "An api for tractor owner-farmer relationship",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
@@ -10,7 +10,7 @@
     "test",
     "learn"
   ],
-  "author": "Innocent",
+  "author": "Stephen Innocent",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",

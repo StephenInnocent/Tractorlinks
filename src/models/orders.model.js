@@ -11,6 +11,14 @@ const orderSchema = new Schema({
         required:true,
         min: 6,
     },
+    state:{
+        type: String,
+        required:true
+    },
+    LGA:{
+        type:String,
+        required:true
+    },
     location: {
         type: String,
         required:true,
@@ -26,6 +34,7 @@ const orderSchema = new Schema({
         enum: ["Tractor-Hiring","Fertilisers","Training","Dairy","seedlings","Livestock Management"]
     },
     orderedBy: String,
+    takenBy: String,
     status: {
         type: String,
         default:"processing",

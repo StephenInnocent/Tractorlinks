@@ -3,8 +3,10 @@ const {z, string} = require("zod");
 const makeOrderValidator = z.object({
     name: z.string().max(36),
     location: z.string(),
-    date: z.string(),
+    date: z.date(),
     contact: z.number().min(9),
+    state: z.string(),
+    LGA: z.string()
     // class: z.string(),
     // orderedBy: z.string()
 })
@@ -21,7 +23,7 @@ const updateValidator = z.object({
 })
 
 const deleteValidator = z.object({
-    reason: z.string().min(5)
+    reason: z.string().min(5),
 });
 
 module.exports={

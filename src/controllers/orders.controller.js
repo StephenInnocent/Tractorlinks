@@ -19,8 +19,10 @@ async function makeOrder(req,res){
                 location: req.body.location,
                 contact: req.body.contact,
                 date: req.body.date,
+                state: req.body.state,
+                LGA: req.body.LGA,
                 class: req.params.serviceID,
-                orderedBy: req.params.id
+                orderedBy: req.params.id,
             }).then(() => {
                 console.log(`${req.params.serviceID} order by ${req.params.id} was succesfull`)
             }).catch((e) => {
@@ -93,9 +95,71 @@ async function deleteOrderRequest(req,res){
     }
 };
 
+async function ordersOffered(req,res){
+    try{
+        const orders = await orderModel.find({takenBy:req.params.id}) 
+        if(!orders){
+            res.json("Sorry, You have no orders offered").end();
+        }else{
+            res.status(200).json(orders).end();
+        }
+}catch(e){
+    res.status(500).json(e).end()
+}
+}
+
+async function getMyOrders(req,res){
+    try{
+        const myOrders = await orderModel.find({orderedBy:req.params.id});
+
+        if(myOrders){
+            res.status(200).json(myOrders).end()
+        }else{
+            res.status(500).json("Cannot find any orders made by you").end()
+        }
+    } catch(e){
+        res.status(500).json(e).end()
+    }
+    
+}
+
+async function getCompletedOrders(req,res){
+    try{
+        const completedOrders = await orderModel.find({orderedBy:req.params.id,status:req.query.status});
+
+        if(completedOrders){
+            res.status(200).json(completedOrders).end()
+        }else{
+            res.status(500).json("Cannot find any completed orders made by you").end()
+        }
+    } catch(e){
+        res.status(500).json(e).end()
+    }
+    
+}
+
+async function getPendingOrders(req,res){
+    try{
+        const PendingOrders = await orderModel.find({orderedBy:req.params.id,status:req.query.status});
+
+        if(PendingOrders){
+            res.status(200).json(PendingOrders).end()
+        }else{
+            res.status(500).json("Cannot find any Pending orders made by you").end()
+        }
+    } catch(e){
+        res.status(500).json(e).end()
+    }
+    
+}
+
 
 module.exports = {
     makeOrder,
     deleteOrderRequest,
     updateOrder,
+    getCompletedOrders,
+    getMyOrders,
+    ordersOffered,
+    getPendingOrders
 }

@@ -43,7 +43,7 @@ async function register(req, res) {
             };
         }
     }catch(e){
-            res.status(500).end();
+            res.status(500).json(e).end();
     } 
 
 };
@@ -66,7 +66,7 @@ async function updateUser(req,res){
                     req.body.password = updatedPassword;
                 }
                 
-                console.log("functioning");
+                
                 try{
                    const updatedUser = await userModel.findOneAndUpdate({_id: req.params.id}, {...req.body});
                    updatedUser.password = undefined;
@@ -161,49 +161,97 @@ async function deleteAccountRequest(req,res){
 
 
 async function login(req, res) {
+    if(!req.body.email){
+        const validatedData = validator.loginValidatorNumber.safeParse(req.body);
+        //console.log(validatedData)
+        if(!validatedData.success){
+            res.status(400).json(errormessage.formatZodError(validatedData.error)).end()
+        } else {
+            try{
 
-    const validatedData = validator.loginValidator.safeParse(req.body);
-    //console.log(validatedData)
-    if(!validatedData.success){
-        res.status(400).json(errormessage.formatZodError(validatedData.error)).end()
-    } else {
-        try{
-
-            const user = await userModel.findOne({email:req.body.email});
-    
-            if (!user) return res.status(401).json("Wrong Credentials").end();
-
-            else{
-                
-                console.log(`User with username '${user.name}' found`);
-    
-            }
-    
-            if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Incorrect Password!").end();
-            
-            // const accessToken = jwt.sign({
-            //     id: user._id,
-            //     isAdmin: user.isAdmin,
-            // }, process.env.JWT_SEC,
-            // {expiresIn:"2d"})
-    
-            // console.log(accessToken);
-            //accessToken
-
-            user.password = undefined;
-            user.email = undefined;
-            user.phoneNumber = undefined;
-            user.createdAt = undefined;
-            user.updatedAt = undefined;
+                const user = await userModel.findOne({phoneNumber:req.body.phoneNumber});
         
+                if (!user) return res.status(401).json("Wrong Credentials").end();
 
-            res.json({user}).end();
+                else{
+                    
+                    console.log(`User with username '${user.name}' found`);
+                }
+        
+                if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Incorrect Password!").end();
+                else{
+                    console.log("Password correct!");
+                }
+                
+                // const accessToken = jwt.sign({
+                //     id: user._id,
+                //     isAdmin: user.isAdmin,
+                // }, process.env.JWT_SEC,
+                // {expiresIn:"2d"})
+        
+                // console.log(accessToken);
+                //accessToken
+
+                user.password = undefined;
+                user.email = undefined;
+                user.phoneNumber = undefined;
+                user.createdAt = undefined;
+                user.updatedAt = undefined;
+            
+
+                res.json({user}).end();
+
+        
+            } catch(err){
+                    res.status(500).json(err).end()
+            }
+        }
+    } else{
+        const validatedData = validator.loginValidatorEmail.safeParse(req.body);
+        //console.log(validatedData)
+        if(!validatedData.success){
+            res.status(400).json(errormessage.formatZodError(validatedData.error)).end()
+        } else {
+            try{
+
+                const user = await userModel.findOne({email:req.body.email});
+        
+                if (!user) return res.status(401).json("Wrong Credentials").end();
+
+                else{
+                    
+                    console.log(`User with username '${user.name}' found`);
+        
+                }
+        
+                if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Incorrect Password!").end();
+                
+                // const accessToken = jwt.sign({
+                //     id: user._id,
+                //     isAdmin: user.isAdmin,
+                // }, process.env.JWT_SEC,
+                // {expiresIn:"2d"})
+        
+                // console.log(accessToken);
+                //accessToken
+
+                user.password = undefined;
+                user.email = undefined;
+                user.phoneNumber = undefined;
+                user.createdAt = undefined;
+                user.updatedAt = undefined;
+            
+
+                res.json({user}).end();
+
+        
+            } catch(err){
+                    res.status(500).json(err).end()
+            };
+        };
+    }
 
     
-            } catch(err){
-                res.status(500).json(err).end()
-            };
-    };
     
 }
 
@@ -233,6 +281,10 @@ async function availableTractors(req,res){
     }
     
 }
+
+
+
+
 
 
 module.exports = {

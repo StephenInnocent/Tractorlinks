@@ -57,6 +57,17 @@ const checkUser = async (req,res,next) =>{
     }
 }
 
+
+const checkTractorOwner = async (req,res,next) =>{
+    const user = await userModel.findById(req.params.id);
+    if(user.role === "Tractor Owner"){
+        console.log("Authorised!");
+        next();
+    }else{
+        res.status(403).json("You are not authorised to do that!").end()
+    }
+}
+
 // const verifyTokenAndAdmin = (req,res,next) => {
 //     verifyToken(req,res, ()=> {
 //         if(req.user.role = "Admin"){
@@ -72,6 +83,6 @@ const checkUser = async (req,res,next) =>{
 
 module.exports = {
     checkAdmin,
-    
+    checkTractorOwner,
     checkUser
 }

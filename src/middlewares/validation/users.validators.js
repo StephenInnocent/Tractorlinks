@@ -13,19 +13,24 @@ const updateValidator = z.object({
 }).required({message:"Please fill in all fields"})
  
 
-const loginValidator = z.object({
+const loginValidatorEmail = z.object({
     email: z.string().email().includes("@"),
     password: z.string().min(6).max(36).trim()
 })
 
+const loginValidatorNumber = z.object({
+    phoneNumber: z.number(),
+    password: z.string().min(6).max(36).trim()
+})
+
 const deleteValidator = z.object({
-   
-    reason: z.string().min(3)
+   reason: z.string().min(3)
 })
 module.exports = {
     registerValidator,
     updateValidator,
-    loginValidator,
-    deleteValidator
+    loginValidatorEmail,
+    deleteValidator,
+    loginValidatorNumber
 }
 
