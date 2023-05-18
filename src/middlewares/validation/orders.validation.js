@@ -3,7 +3,7 @@ const {z, string} = require("zod");
 const makeOrderValidator = z.object({
     name: z.string().max(36),
     location: z.string(),
-    date: z.date(),
+    date: z.string(),
     contact: z.number().min(9),
     state: z.string(),
     LGA: z.string()

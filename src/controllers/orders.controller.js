@@ -2,7 +2,8 @@ const {orderModel} =  require("../models/orders.model");
 const {adminReqModel} = require("../models/adminReq.models");
 const { userModel } = require("../models/users.models");
 const validator = require("../middlewares/validation/orders.validation");
-const errormessage = require("../middlewares/utilities/errormessage")
+const errormessage = require("../middlewares/utilities/errormessage");
+const session=require("express-session");
 
 async function makeOrder(req,res){
     const result = validator.makeOrderValidator.safeParse(req.body)
@@ -109,8 +110,9 @@ async function ordersOffered(req,res){
 }
 
 async function getMyOrders(req,res){
+    const userID = req.session.id;
     try{
-        const myOrders = await orderModel.find({orderedBy:req.params.id});
+        const myOrders = await orderModel.find({orderedBy:userID});
 
         if(myOrders){
             res.status(200).json(myOrders).end()

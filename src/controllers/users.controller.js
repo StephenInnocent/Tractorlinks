@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("../middlewares/validation/users.validators")
 const errormessage = require("../middlewares/utilities/errormessage")
+const session = require("express-session")
 
 
 async function register(req, res) {
@@ -197,8 +198,9 @@ async function login(req, res) {
                 user.phoneNumber = undefined;
                 user.createdAt = undefined;
                 user.updatedAt = undefined;
+                user.role = undefined;
             
-
+                req.session.id=user._id;
                 res.json({user}).end();
 
         

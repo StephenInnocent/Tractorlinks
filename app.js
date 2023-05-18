@@ -12,12 +12,18 @@ require('dotenv').config();
 const helmet = require("helmet")
 
 const MONGO_URL = process.env.MONGO_URL;
+const SESSION_KEY=process.env.SESSION_KEY;
 
 app.use(cors({
     origin:"*"
 }));
 app.use(helmet())
 app.use(express.json());
+app.use(session({
+    secret:SESSION_KEY,
+    resave:true,
+    saveUninitialized:true
+}))
 
 app.use("/orders", orderRouter);
 app.use("/users", userRouter);
