@@ -110,9 +110,9 @@ async function ordersOffered(req,res){
 }
 
 async function getMyOrders(req,res){
-    const userID = req.session.id;
+    // const userID = req.session.id;
     try{
-        const myOrders = await orderModel.find({orderedBy:userID});
+        const myOrders = await orderModel.find({orderedBy:req.params.id});
 
         if(myOrders){
             res.status(200).json(myOrders).end()
