@@ -33,14 +33,14 @@ async function register(req, res) {
             const user = await userModel.findOne({name:req.body.name});
 
             if(!user){
-                res.status(500).send(`User registration failed. please retry`).end()
+                res.status(500).json("User registration failed. please retry").end()
             } else{
-                res.send(`Succesfully registered!`).status(200).end();
+                res.json("Succesfully registered!").status(200).end();
             }
 
             }catch(e){
                 console.log('an error ocurred',e);
-                res.status(500).send(`User registration failed. please retry`).end()
+                res.status(500).send("User registration failed. please retry").end()
             };
         }
     }catch(e){
@@ -244,7 +244,7 @@ async function login(req, res) {
                 user.updatedAt = undefined;
             
 
-                res.json({user}).end();
+                res.status(200).json({user}).end();
 
         
             } catch(err){
