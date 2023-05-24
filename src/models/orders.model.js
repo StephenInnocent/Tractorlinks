@@ -39,7 +39,9 @@ const orderSchema = new Schema({
         default: "Tractor Hiring",
         enum: ["Tractor-Hiring","Fertilisers","Training","Dairy","seedlings","Livestock Management"]
     },
-    orderedBy: String,
+    orderedBy: {
+        type:String,
+    },
     takenBy: String,
     status: {
         type: String,

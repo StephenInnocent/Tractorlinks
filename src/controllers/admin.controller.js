@@ -96,11 +96,11 @@ async function deleteOrder(req,res){
 
 async function getAllUsers(){
     try{
-        const users = await userModel.find();
-        res.status(200).json(users).end()
+        const users = await userModel.find({role: "Tractor Owner"});
+        res.status(200).json(users).end();
     } catch(e){
         res.status(500).json(e).end();
-    }
+    };
 }
 
 async function getSingleUser(req,res){

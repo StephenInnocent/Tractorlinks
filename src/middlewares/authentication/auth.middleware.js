@@ -95,21 +95,22 @@ const verifyToken = async(req,res,next) => {
 //     }
 // }
 
-// const verifyTokenAndAdmin = (req,res,next) => {
-//     verifyToken(req,res, ()=> {
-//         if(req.user.role = "Admin"){
-//             console.log("Admins can proceed");
-//             next();
-//         }else{
-//             console.log("Not an Admin");
-//             res.status(403).json("You are not authorised to do that").end()
-//         }
-//     })
-// }
+const verifyTokenAndAdmin = (req,res,next) => {
+    verifyToken(req,res, ()=> {
+        if(req.user.role = "Admin"){
+            console.log("Admins can proceed");
+            next();
+        }else{
+            console.log("Not an Admin");
+            res.status(403).json("You are not authorised to do that").end()
+        }
+    })
+}
 
 
 module.exports = {
     checkAdmin,
     verifyTokenAndTractorOwner,
-    verifyTokenAndAuthorisation
+    verifyTokenAndAuthorisation,
+    verifyTokenAndAdmin
 }

@@ -48,7 +48,12 @@ async function updateOrder(req,res){
     } else{
         try{
             const updatedOrder = await orderModel.findOneAndUpdate({_id:req.body.id},{...req.body});
-            res.json({message:"Order sucessfully updated!. Refresh to view changes ",updatedOrder}).status(200).end();
+            if(updatedOrder){
+                res.json({message:"Order sucessfully updated!. Refresh to view changes ",updatedOrder}).status(200).end();
+            }else{
+                res.status(500).json("Update failed").end();
+            }
+           
         } catch(e) {
             console.log(e);
             res.status(500).json("Update failed").end();

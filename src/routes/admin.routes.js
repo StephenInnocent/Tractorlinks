@@ -9,8 +9,8 @@ router.get("/:id", checkAdmin, ()=>{
 });
 router.delete("/:id/deleteOrder", checkAdmin, deleteOrder);
 router.delete("/:id/deleteUser", checkAdmin, deleteUser);
-router.get("/:id/getUsers",checkAdmin,getAllUsers);
-router.get("/:id/getUser", checkAdmin, getSingleUser)
+router.get("/getUsers",checkAdmin,getAllUsers);
+router.get("/getUser", checkAdmin, getSingleUser);
 
 
 
