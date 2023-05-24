@@ -7,7 +7,7 @@ const {userRouter} = require("./src/routes/users.routes");
 const {orderRouter} = require("./src/routes/orders.routes");
 const {adminRouter} = require("./src/routes/admin.routes");
 const cors = require("cors");
-// const session = require("express-session")
+const session = require("express-session")
 require('dotenv').config();
 const helmet = require("helmet")
 
@@ -19,11 +19,11 @@ app.use(cors({
 }));
 app.use(helmet())
 app.use(express.json());
-// app.use(session({
-//     secret: SESSION_KEY,
-//     resave:true,
-//     saveUninitialized:true
-// }))
+app.use(session({
+    secret: SESSION_KEY,
+    resave:true,
+    saveUninitialized:true
+}))
 
 app.use("/orders", orderRouter);
 app.use("/users", userRouter);

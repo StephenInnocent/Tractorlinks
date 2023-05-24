@@ -28,6 +28,12 @@ const orderSchema = new Schema({
         type: String,
         required:true,
     },
+    time: {
+        type: String
+    },
+    typeOfTractor:{
+        type: String
+    },
     class: {
         type: String,
         default: "Tractor Hiring",

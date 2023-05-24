@@ -2,7 +2,7 @@ const {model, Schema} = require("mongoose");
 
 const adminReqSchema = new Schema({
        name: String,
-       objectId: String,
+       object: Object,
        email: String,
        description: String,
        reason: String,

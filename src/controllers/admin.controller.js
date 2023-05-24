@@ -14,6 +14,7 @@ async function deleteUser(req,res){
         res.status(400).json(errormessage.formatZodError(result.error)).end();
     }else{
         try{
+            //find request to delete account made by user and then delete the user and request.
             const reqorder = await adminReqModel.findOne({_id:req.body.id});
 
             if(reqorder){

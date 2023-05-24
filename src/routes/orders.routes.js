@@ -1,17 +1,17 @@
 const {Router} = require("express");
 const {makeOrder, updateOrder, deleteOrderRequest,getCompletedOrders,getMyOrders,getPendingOrders,ordersOffered} = require("../controllers/orders.controller")
-const {checkUser,checkTractorOwner} = require("../middlewares/authentication/auth.middleware")
+const {verifyTokenAndAuthorisation,verifyTokenAndTractorOwner} = require("../middlewares/authentication/auth.middleware")
 
 
 const router = Router();
 
-router.post("/:id/:serviceID", checkUser,makeOrder);
-router.put("/:id/update", checkUser,updateOrder);
-router.delete("/:id/:serviceID/delete", checkUser,deleteOrderRequest);
-router.get("/:id?status=pending",checkUser,getPendingOrders);
-router.get("/:id?status=completed",checkUser,getCompletedOrders);
-router.get("/:id/",checkUser,getMyOrders);
-router.get("/:id",checkTractorOwner,ordersOffered)
+router.post("/:serviceID", verifyTokenAndAuthorisation,makeOrder);
+router.put("/update", verifyTokenAndAuthorisation,updateOrder);
+router.delete("/:id/:serviceID/delete", verifyTokenAndAuthorisation,deleteOrderRequest);
+router.get("/:id?status=pending",verifyTokenAndAuthorisation,getPendingOrders);
+router.get("/:id?status=completed",verifyTokenAndAuthorisation,getCompletedOrders);
+router.get("/:id/",verifyTokenAndAuthorisation,getMyOrders);
+router.get("/:id",verifyTokenAndTractorOwner,ordersOffered);
 
 
 module.exports = {

@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("../middlewares/validation/users.validators")
 const errormessage = require("../middlewares/utilities/errormessage")
-const session = require("express-session")
+const session = require("express-session");
 
 
 async function register(req, res) {
@@ -101,16 +101,16 @@ async function deleteAccountRequest(req,res){
     } else{
         try{
             try{
-                const Maker = await userModel.findById(req.params.id);
+                const Maker = await userModel.find({email:req.session.email});
 
                 if(Maker){
                     console.log("omo request running o!");
                     console.log("Maker present");
                     const reqorder = await adminReqModel.create({
                     name: Maker.name,
-                    objectId: req.params.id,
+                    object: Maker,
                     email: Maker.email,
-                    description: req.params.description,
+                    description: "Delete My Account",
                     reason: req.body.reason
                     });
                     if(reqorder){
@@ -161,7 +161,8 @@ async function deleteAccountRequest(req,res){
 }
 
 
-async function login(req, res) {
+async function logIn(req, res) {
+
     if(!req.body.email){
         const validatedData = validator.loginValidatorNumber.safeParse(req.body);
         //console.log(validatedData)
@@ -182,31 +183,42 @@ async function login(req, res) {
                 if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Incorrect Password!").end();
                 else{
                     console.log("Password correct!");
+                    const accessToken = jwt.sign({
+                        id: user._id,
+                        isAdmin: user.isAdmin,
+                    }, process.env.JWT_SEC,
+                    {expiresIn:"2d"})
+    
+                    req.session.regenerate(function (err) {
+                        if (err) console.log(err);
+                    
+                        // store user information in session, typically a user id
+                        req.session.email = req.body.email;
+                        req.session.token = accessToken;
+                        console.log(req.session.email,req.session.token);
+                    
+                        // save the session before redirection to ensure page
+                        // load does not happen before session is saved
+                        req.session.save(function (err) {
+                          if (err) return next(err)
+                            console.log("session saved");
+                        })
+                    });
+    
+                    user.password = undefined;
+                    user.email = undefined;
+                    user.phoneNumber = undefined;
+                    user.createdAt = undefined;
+                    user.updatedAt = undefined;
+                    user.role = undefined;
+                    
+    
+                    res.json({user}).end()
                 }
                 
-                // const accessToken = jwt.sign({
-                //     id: user._id,
-                //     isAdmin: user.isAdmin,
-                // }, process.env.JWT_SEC,
-                // {expiresIn:"2d"})
-        
-                // console.log(accessToken);
-                //accessToken
-
-                user.password = undefined;
-                user.email = undefined;
-                user.phoneNumber = undefined;
-                user.createdAt = undefined;
-                user.updatedAt = undefined;
-                user.role = undefined;
-            
-                req.session.id=user._id;
-                res.json({user}).end();
-
-        
             } catch(err){
-                    res.status(500).json(err).end()
-            }
+                    res.status(500).json(err).end();
+            };
         }
     } else{
         const validatedData = validator.loginValidatorEmail.safeParse(req.body);
@@ -218,7 +230,7 @@ async function login(req, res) {
 
                 const user = await userModel.findOne({email:req.body.email});
         
-                if (!user) return res.status(401).json("Wrong Credentials").end();
+                if (!user) return res.status(401).json("Account does'nt exist").end();
 
                 else{
                     
@@ -226,26 +238,43 @@ async function login(req, res) {
         
                 }
         
-                if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Incorrect Password!").end();
-                
-                // const accessToken = jwt.sign({
-                //     id: user._id,
-                //     isAdmin: user.isAdmin,
-                // }, process.env.JWT_SEC,
-                // {expiresIn:"2d"})
-        
-                // console.log(accessToken);
-                //accessToken
-
-                user.password = undefined;
-                user.email = undefined;
-                user.phoneNumber = undefined;
-                user.createdAt = undefined;
-                user.updatedAt = undefined;
+                if (!bcrypt.compareSync(req.body.password, user.password)) return res.json("Incorrect Password!").end();
+                else{
+                    console.log("password correct");
+                    const accessToken = jwt.sign({
+                        id: user._id,
+                        isAdmin: user.isAdmin,
+                    }, process.env.JWT_SEC,
+                    {expiresIn:"2d"})
             
-
-                res.status(200).json({user}).end();
-
+                    req.session.regenerate(function (err) {
+                        if (err) console.log(err);
+                    
+                        // store user information in session
+                        req.session.email = req.body.email;
+                        req.session.token = accessToken;
+                        console.log(req.session.email,req.session.token);
+                    
+                        // save the session before redirection to ensure page
+                        // load does not happen before session is saved
+                        req.session.save(function (err) {
+                          if (err) return next(err)
+                            console.log("session saved");
+                        })
+                    });
+    
+                    user.password = undefined;
+                    user.email = undefined;
+                    user.phoneNumber = undefined;
+                    user.createdAt = undefined;
+                    user.updatedAt = undefined;
+                
+    
+                    res.status(200).json({user}).end();
+    
+                }
+                
+                
         
             } catch(err){
                     res.status(500).json(err).end()
@@ -283,16 +312,35 @@ async function availableTractors(req,res){
     }
     
 }
+function logOut(req,res){
+    req.session.email = null;
+    req.session.token = null;
+    
+    req.session.save(function (err) {
+        if (err) next(err)
+    });
 
+        // regenerate the session, which is good practice to help
+        // guard against forms of session fixation
+    req.session.regenerate(function (err) {
+    if (err) next(err);
+    else{
+        console.log("session destroyed");
+        res.redirect('/')
+    }
+    
+    });
+}
 
 
 
 
 
 module.exports = {
+    logOut,
     register,
     updateUser,
-    login,
+    logIn,
     deleteAccountRequest,
     availableTractors
 }

@@ -3,17 +3,14 @@ const {adminReqModel} = require("../models/adminReq.models");
 const { userModel } = require("../models/users.models");
 const validator = require("../middlewares/validation/orders.validation");
 const errormessage = require("../middlewares/utilities/errormessage");
-const session=require("express-session");
+const session = require("express-session");
 
 async function makeOrder(req,res){
-    const result = validator.makeOrderValidator.safeParse(req.body)
-
-   
+    const result = validator.makeOrderValidator.safeParse(req.body);
 
     if(!result.success){
         res.status(400).json(errormessage.formatZodError(result.error))
     }else{
-
         try{
             await orderModel.create({
                 name: req.body.name,
@@ -22,10 +19,12 @@ async function makeOrder(req,res){
                 date: req.body.date,
                 state: req.body.state,
                 LGA: req.body.LGA,
+                time: req.body.time,
+                typeOfTractor: req.body.typeOfTractor,
                 class: req.params.serviceID,
-                orderedBy: req.params.id,
+                orderedBy: req.session.email,
             }).then(() => {
-                console.log(`${req.params.serviceID} order by ${req.params.id} was succesfull`)
+                console.log(`${req.params.serviceID} order was succesfull`)
             }).catch((e) => {
                 console.log(`An error occurred`,e);
                 res.status(500).json("Failed to create order").end();
@@ -49,7 +48,7 @@ async function updateOrder(req,res){
     } else{
         try{
             const updatedOrder = await orderModel.findOneAndUpdate({_id:req.body.id},{...req.body});
-        res.json({message:"Order sucessfully updated!. Refresh to view changes ",updatedOrder}).status(200).end();
+            res.json({message:"Order sucessfully updated!. Refresh to view changes ",updatedOrder}).status(200).end();
         } catch(e) {
             console.log(e);
             res.status(500).json("Update failed").end();
@@ -110,7 +109,7 @@ async function ordersOffered(req,res){
 }
 
 async function getMyOrders(req,res){
-    // const userID = req.session.id;
+    const userID = req.session.id;
     try{
         const myOrders = await orderModel.find({orderedBy:req.params.id});
 

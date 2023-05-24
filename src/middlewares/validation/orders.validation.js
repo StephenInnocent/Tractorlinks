@@ -6,7 +6,9 @@ const makeOrderValidator = z.object({
     date: z.string(),
     contact: z.number().min(9),
     state: z.string(),
-    LGA: z.string()
+    LGA: z.string(),
+    typeOfTractor: z.string(),
+    time: string()
     // class: z.string(),
     // orderedBy: z.string()
 })
