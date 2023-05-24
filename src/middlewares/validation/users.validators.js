@@ -16,7 +16,7 @@ const updateValidator = z.object({
 const loginValidatorEmail = z.object({
     email: z.string().email().includes("@"),
     password: z.string().min(6).max(36).trim()
-})
+});
 
 const loginValidatorNumber = z.object({
     phoneNumber: z.number(),

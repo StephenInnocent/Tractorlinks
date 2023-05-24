@@ -1,8 +1,8 @@
 const {userModel} = require("../models/users.models");
 const {orderModel} = require("../models/orders.model");
 const {adminReqModel} = require("../models/adminReq.models");
-const validator = require("../middlewares/validation/admin.validation")
-const errormessage = require("../middlewares/utilities/errormessage")
+const validator = require("../middlewares/validation/admin.validation");
+const errormessage = require("../middlewares/utilities/errormessage");
 
 async function deleteUser(req,res){
 
@@ -96,12 +96,13 @@ async function deleteOrder(req,res){
 
 async function getAllUsers(){
     try{
-        const users = await userModel.find({role: "Tractor Owner"});
+        const users = await userModel.aggregate(all)
         res.status(200).json(users).end();
     } catch(e){
         res.status(500).json(e).end();
     };
-}
+};
+
 
 async function getSingleUser(req,res){
 

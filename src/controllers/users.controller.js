@@ -7,6 +7,25 @@ const errormessage = require("../middlewares/utilities/errormessage")
 const session = require("express-session");
 
 
+function checkEmailAndphoneNumber(req,res,next){
+    try{
+        const testEmail = userModel.find({email:req.body.email})
+        if(testEmail){
+            res.json("A user Account with the input email exists").status(400).end();
+        } else{
+            const testNumber = userModel.find({phoneNumber:req.body.phoneNumber})
+            if(testNumber){
+                res.json("A user Account with the input Number exists").status(400).end()
+            } else{
+                next();
+            }
+        }
+    } catch(e){
+        res.json(e).end();
+    }
+
+}
+
 async function register(req, res) {
     try{
         const result = validator.registerValidator.safeParse(req.body);
@@ -20,7 +39,8 @@ async function register(req, res) {
             const salt = bcrypt.genSaltSync(10);
 
             const encryptedPassword = bcrypt.hashSync(req.body.password, salt);
-
+            // checkEmailAndphoneNumber();
+           
             try{
                  await userModel.create({
                     name: req.body.name,
@@ -331,9 +351,6 @@ function logOut(req,res){
     
     });
 }
-
-
-
 
 
 module.exports = {
