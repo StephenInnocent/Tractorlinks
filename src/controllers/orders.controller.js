@@ -29,7 +29,7 @@ async function makeOrder(req,res){
                 res.status(500).json("Failed to create order").end();
             })
         
-            res.json(`Order succesful`).end();
+            res.status(200).json(`Order succesful`).end();
         } catch(e){
             res.status(500).json("Failed to create order").end();
         }
