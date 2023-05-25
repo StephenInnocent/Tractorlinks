@@ -73,7 +73,7 @@ async function updateUser(req,res){
     
 
     try{
-        const result = validator.updateValidator.safeParse(req.params);
+        const result = validator.updateValidator.safeParse(req.body);
 
         console.log(`validated:`.concat(result.success));
         console.log(result.error);

@@ -106,15 +106,18 @@ async function getAllUsers(){
 
 async function getSingleUser(req,res){
 
-    const result = validator.getUserValidator.safeParse()
+    const result = validator.getUserValidator.safeParse(req.body)
 
     if(!result.success){
         res.status(400).json(errormessage.formatZodError(result.error))
     }else{
         try{
             const user = await userModel.findById(req.body.id);
-            
-            res.status(200).json(user).end();
+            if(!user) {
+                res.status(400).json("User does not exist").end()
+            } else{
+                res.status(200).json(user).end();
+            }            
         }catch(e){
             res.status(500).json(e).end()
         }

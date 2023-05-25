@@ -96,7 +96,7 @@ const verifyToken = async(req,res,next) => {
 // }
 
 const verifyTokenAndAdmin = (req,res,next) => {
-    verifyToken(req,res, ()=> {
+    verifyToken(req,res,next, ()=> {
         if(req.user.role = "Admin"){
             console.log("Admins can proceed");
             next();

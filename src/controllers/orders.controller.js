@@ -28,8 +28,9 @@ async function makeOrder(req,res){
                 console.log(`An error occurred`,e);
                 res.status(500).json("Failed to create order").end();
             })
-        
-            res.status(200).json(`Order succesful`).end();
+            const order = await orderModel.findOne({name:req.body.name});
+            message = `Order succesful`,
+            res.status(200).json({order,message}).end();
         } catch(e){
             res.status(500).json("Failed to create order").end();
         }
