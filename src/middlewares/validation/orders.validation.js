@@ -4,10 +4,9 @@ const makeOrderValidator = z.object({
     name: z.string().max(36),
     location: z.string(),
     date: z.string(),
-    contact: z.number().min(9),
+    contact: z.string().min(10,{message:"Your contact must not be less than 10 digits"}).max(12,{message:"Your contact must not exceed 11 digits"}),
     state: z.string(),
     LGA: z.string(),
-    typeOfTractor: z.string(),
     time: string()
     // class: z.string(),
     // orderedBy: z.string()

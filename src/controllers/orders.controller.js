@@ -20,7 +20,6 @@ async function makeOrder(req,res){
                 state: req.body.state,
                 LGA: req.body.LGA,
                 time: req.body.time,
-                typeOfTractor: req.body.typeOfTractor,
                 class: req.params.serviceID,
                 orderedBy: req.session.email,
             }).then(() => {
@@ -30,9 +29,9 @@ async function makeOrder(req,res){
                 res.status(500).json("Failed to create order").end();
             })
         
-            res.send(`Order succesful`).end();
+            res.json(`Order succesful`).end();
         } catch(e){
-            res.status(500).end();
+            res.status(500).json("Failed to create order").end();
         }
     }
     

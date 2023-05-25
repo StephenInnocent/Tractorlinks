@@ -7,9 +7,10 @@ const orderSchema = new Schema({
         min: 6,
     },
     contact: {
-        type: Number,
+        type: String,
         required:true,
-        min: 6,
+        min: 10,
+        max: 12
     },
     state:{
         type: String,
@@ -31,9 +32,7 @@ const orderSchema = new Schema({
     time: {
         type: String
     },
-    typeOfTractor:{
-        type: String
-    },
+   
     class: {
         type: String,
         default: "Tractor Hiring",
