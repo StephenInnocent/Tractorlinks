@@ -53,9 +53,16 @@ const userSchema = new Schema({
     Reviews: {
         type: Array
     },
-    noOfTractors: Number,
-    ordersCompleted: Number,
-    pendingOrders: Number,
+    noOfTractors: {
+        type: Number,
+        default: 0
+    },
+    ordersCompleted:{
+        type: Number,
+    },
+    pendingOrders: {
+        type: Number,
+    }
     
 },{timestamps:true});
 

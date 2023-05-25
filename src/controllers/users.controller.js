@@ -55,14 +55,14 @@ async function register(req, res) {
             const user = await userModel.findOne({name:req.body.name});
 
             if(!user){
-                res.status(500).json("User registration failed. please retry").end()
+                res.status(500).json("User registration failed. Please retry").end()
             } else{
                 res.json("Succesfully registered!").status(200).end();
             }
 
             }catch(e){
-                console.log('an error ocurred',e);
-                res.status(500).send("User registration failed. please retry").end()
+                console.log(e);
+                res.status(500).send("User registration failed. Please retry").end()
             };
         }
     }catch(e){
@@ -73,42 +73,38 @@ async function register(req, res) {
 
 async function updateUser(req,res){
     
+    // try{
+    //     const result = validator.updateValidator.safeParse(req.body);
 
-    try{
-        const result = validator.updateValidator.safeParse(req.body);
+    //     console.log(`validated:`.concat(result.success));
+    //     console.log(result.error);
 
-        console.log(`validated:`.concat(result.success));
-        console.log(result.error);
-
-        if (!result.success){
-            return res.status(400).json(errormessage.formatZodError(result.error)).end();
-        } else{
-                if(req.body.password){
-                    const salt = bcrypt.genSaltSync(10);
-                    const updatedPassword = bcrypt.hashSync(req.body.password, salt)
-                    req.body.password = updatedPassword;
-                }
+    //     if (!result.success){
+    //         return res.status(400).json(errormessage.formatZodError(result.error)).end();
+    //     }else{
+            if(req.body.password){
+                const salt = bcrypt.genSaltSync(10);
+                const updatedPassword = bcrypt.hashSync(req.body.password, salt)
+                req.body.password = updatedPassword;
+            }
                 
                 
-                try{
-                   const updatedUser = await userModel.findOneAndUpdate({_id: req.params.id}, {...req.body});
-                   updatedUser.password = undefined;
-                   updatedUser.phoneNumber = undefined;
-                   updatedUser.email = undefined;
+            try{
+                const updatedUser = await userModel.findOneAndUpdate({_id: req.params.id}, {...req.body});
+                updatedUser.password = undefined;
+                updatedUser.phoneNumber = undefined;
+                updatedUser.email = undefined;
         
-        
-                    console.log("Profile successfully updated");
-                    res.status(200).json({updatedUser,message:"Refresh to view changes"}).end()
-                } catch(e){
-                    res.status(500).json("Update failed").end()
-                    console.log(e);
-                }
-        
-        }
-    
-    } catch(e){
-        res.status(500).json(e).end()
-    }
+                console.log("Profile successfully updated");
+                res.status(200).json({updatedUser,message:"Profile successfully updated. Refresh to view changes made."}).end()
+            } catch(e){
+                res.status(500).json("Profile update failed").end()
+                console.log(e);
+            }
+    //     }
+    // } catch(e){
+    //     res.status(500).json(e).end()
+    // }
 
 };
 
@@ -151,30 +147,6 @@ async function deleteAccountRequest(req,res){
                 res.status(500).end();
             }
             
-            
-            // if(Maker){
-            //     console.log("omo request running o!");
-            //         console.log("Maker present");
-            //         const reqorder = await adminReqModel.create({
-            //         name: Maker.name,
-            //         objectId: req.params.id,
-            //         email: Maker.email,
-            //         description: req.params.description,
-            //         reason: req.body.reason
-            //     });
-            //     if(reqorder){
-            //         console.log("Request made");
-            //         res.json("Your request to delete your account is pending approval by Admin. Email notification will be sent to you. Thank you.").end();
-            //     }else{
-            //         console.log("Request not made");
-            //         res.status(500).json("Request failed").end();
-            //     }
-            // } else(e) => {
-            //     console.log("Request Maker not found");
-            //     res.status(500).end()
-            // }
-    
-            
         } catch(e){
             res.status(500).json("Sorry! Could'nt make delete request.")
         }
@@ -209,7 +181,7 @@ async function logIn(req, res) {
                         id: user._id,
                         isAdmin: user.isAdmin,
                     }, process.env.JWT_SEC,
-                    {expiresIn:"2d"})
+                    {expiresIn:"2d"});
     
                     req.session.regenerate(function (err) {
                         if (err) console.log(err);
@@ -217,7 +189,6 @@ async function logIn(req, res) {
                         // store user information in session, typically a user id
                         req.session.email = req.body.email;
                         req.session.token = accessToken;
-                        console.log(req.session.email,req.session.token);
                     
                         // save the session before redirection to ensure page
                         // load does not happen before session is saved
@@ -234,8 +205,7 @@ async function logIn(req, res) {
                     user.updatedAt = undefined;
                     user.role = undefined;
                     
-    
-                    res.json({user}).end()
+                    res.json({user}).end();
                 }
                 
             } catch(err){
@@ -252,7 +222,7 @@ async function logIn(req, res) {
 
                 const user = await userModel.findOne({email:req.body.email});
         
-                if (!user) return res.status(401).json("Account does'nt exist").end();
+                if (!user) return res.status(401).json("Account doesn't exist").end();
 
                 else{
                     
@@ -291,13 +261,9 @@ async function logIn(req, res) {
                     user.createdAt = undefined;
                     user.updatedAt = undefined;
                 
-    
                     res.status(200).json({user}).end();
     
                 }
-                
-                
-        
             } catch(err){
                     res.status(500).json(err).end()
             };

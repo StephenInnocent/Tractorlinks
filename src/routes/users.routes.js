@@ -6,7 +6,7 @@ const {checkSession} = require("../middlewares/authentication/play")
 const router = Router();
 
 router.post("/register",register);
-router.put("/update", verifyTokenAndAuthorisation, updateUser);
+router.put("/:id/update", verifyTokenAndAuthorisation, updateUser);
 router.delete("/deleteMyAccount", verifyTokenAndAuthorisation,deleteAccountRequest)
 router.post("/login",logIn);
 router.post("/availableTractors", verifyTokenAndAuthorisation,availableTractors);
