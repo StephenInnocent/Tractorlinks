@@ -12,8 +12,6 @@ router.delete("/deleteUser", verifyTokenAndAdmin, deleteUser);
 router.get("/getUsers",verifyTokenAndAdmin,getAllUsers);
 router.get("/getUser", verifyTokenAndAdmin, getSingleUser);
 
-
-
 module.exports = {
     adminRouter:router
 }

@@ -63,10 +63,9 @@ const userSchema = new Schema({
     pendingOrders: {
         type: Number,
     }
-    
 },{timestamps:true});
 
-const userModel = model("User", userSchema)
+const userModel = model("User", userSchema);
 
 module.exports = {
     userModel

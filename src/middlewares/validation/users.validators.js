@@ -18,7 +18,7 @@ const updateValidator = z.object({
     LGAsOfOperation: z.array(),
     statesOfOperation: z.array(),
     workingDays: z.array,
-}).required({message:"Please fill in all fields"})
+}).required({message:"Please fill in all fields"});
  
 
 const loginValidatorEmail = z.object({
@@ -29,11 +29,12 @@ const loginValidatorEmail = z.object({
 const loginValidatorNumber = z.object({
     phoneNumber: z.number(),
     password: z.string().min(6).max(36).trim()
-})
+});
 
 const deleteValidator = z.object({
    reason: z.string().min(3)
-})
+});
+
 module.exports = {
     registerValidator,
     updateValidator,

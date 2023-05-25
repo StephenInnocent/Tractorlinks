@@ -8,9 +8,7 @@ const makeOrderValidator = z.object({
     state: z.string(),
     LGA: z.string(),
     time: string()
-    // class: z.string(),
-    // orderedBy: z.string()
-})
+});
 
 
 const updateValidator = z.object({
