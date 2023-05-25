@@ -2,7 +2,8 @@ const zod = require('zod')
 
 
 function formatZodError (errors) {
-    return  errors.issues[0].message
+   console.log(errors.issues[0].message);
+    return  errors.issues[0].message;
  }
  
  module.exports = {
