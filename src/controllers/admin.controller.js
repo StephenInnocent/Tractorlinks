@@ -30,9 +30,9 @@ async function deleteUser(req,res){
             }else{
                 res.json("The requested delete-account order does not exist!").end();
             };
-            }catch(err){
+        }catch(err){
                 res.status(500).json(err).end();
-            }   
+        };   
     }
 }
 

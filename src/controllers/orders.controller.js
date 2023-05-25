@@ -35,8 +35,6 @@ async function makeOrder(req,res){
             res.status(500).json("Failed to create order").end();
         }
     }
-    
-    
 }
 
 async function updateOrder(req,res){
@@ -53,13 +51,11 @@ async function updateOrder(req,res){
             }else{
                 res.status(500).json("Update failed").end();
             }
-           
         } catch(e) {
             console.log(e);
             res.status(500).json("Update failed").end();
-        }
+        };
     }
-
 }
 
 async function deleteOrderRequest(req,res){
@@ -86,7 +82,6 @@ async function deleteOrderRequest(req,res){
                         res.send(`Your request to delete ${req.params.serviceID} order has been received. Email confirmation will be sent to you when the request has been completed. Thank you.`).end()
                     }
                 } else{
-                    console.log("Request Maker not found");
                     res.status(500).json("Request Maker not found").end()
                 }
             }catch(e){
@@ -141,7 +136,6 @@ async function getCompletedOrders(req,res){
     } catch(e){
         res.status(500).json(e).end()
     }
-    
 }
 
 async function getPendingOrders(req,res){
@@ -156,7 +150,6 @@ async function getPendingOrders(req,res){
     } catch(e){
         res.status(500).json(e).end()
     }
-    
 }
 
 

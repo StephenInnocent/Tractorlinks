@@ -95,7 +95,6 @@ async function updateUser(req,res){
                 updatedUser.phoneNumber = undefined;
                 updatedUser.email = undefined;
         
-                console.log("Profile successfully updated");
                 res.status(200).json({updatedUser,message:"Profile successfully updated. Refresh to view changes made."}).end()
             } catch(e){
                 res.status(500).json("Profile update failed").end()
@@ -132,21 +131,17 @@ async function deleteAccountRequest(req,res){
                     reason: req.body.reason
                     });
                     if(reqorder){
-                        console.log("Request made");
                         res.json("Your request to delete your account is pending approval by Admin. Email notification will be sent to you. Thank you.").end();
                     }else{
-                        console.log("Request not made");
                         res.status(500).json("Request failed").end();
                     }
                 } else{
-                    console.log("Request Maker not found");
                     res.status(500).json("Request Maker not found").end();
                 }
                    
-            } catch{
-                res.status(500).end();
+            } catch(e){
+                res.status(500).json(e).end();
             }
-            
         } catch(e){
             res.status(500).json("Sorry! Could'nt make delete request.")
         }
@@ -168,11 +163,9 @@ async function logIn(req, res) {
                 const user = await userModel.findOne({phoneNumber:req.body.phoneNumber});
         
                 if (!user) return res.status(401).json("Wrong Credentials").end();
-
                 else{
-                    
                     console.log(`User with username '${user.name}' found`);
-                }
+                };
         
                 if (!bcrypt.compareSync(req.body.password, user.password)) return res.send("Incorrect Password!").end();
                 else{
@@ -223,12 +216,9 @@ async function logIn(req, res) {
                 const user = await userModel.findOne({email:req.body.email});
         
                 if (!user) return res.status(401).json("Account doesn't exist").end();
-
                 else{
-                    
                     console.log(`User with username '${user.name}' found`);
-        
-                }
+                };
         
                 if (!bcrypt.compareSync(req.body.password, user.password)) return res.json("Incorrect Password!").end();
                 else{
@@ -245,7 +235,6 @@ async function logIn(req, res) {
                         // store user information in session
                         req.session.email = req.body.email;
                         req.session.token = accessToken;
-                        console.log(req.session.email,req.session.token);
                     
                         // save the session before redirection to ensure page
                         // load does not happen before session is saved
@@ -279,10 +268,6 @@ async function availableTractors(req,res){
         const tractors = await userModel.find({statesOfOperation:req.body.state,LGAsOfOperation:req.body.LGA});
 
         if(tractors){
-            const no = tractors.length
-
-           
-            
             tractors.password = undefined;
             tractors.phoneNumber = undefined;
             tractors.email = undefined;
