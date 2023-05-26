@@ -20,7 +20,7 @@ const userSchema = new Schema({
     },
     phoneNumber:{
         type: String,
-        unique: true,
+        //unique: true,
         required: true
     },
     role: {
